@@ -4,8 +4,7 @@ BEGIN {
 	use lib qw ( t );
 }
 use strict;
-# use Test::More qw(no_plan);
-use Test::More;
+use Test::More tests => 12;
 
 ## read server configuration
 use vars qw( $SERVER_CONFIG );
@@ -16,70 +15,73 @@ $Math::Matlab::Remote::URI = $SERVER_CONFIG->{URI};
 $Math::Matlab::Remote::USER = $SERVER_CONFIG->{USER};
 $Math::Matlab::Remote::PASS = $SERVER_CONFIG->{PASS};
 
-if ($Math::Matlab::Remote::URI) {
-	eval { require LWP::UserAgent };
-	if ($@) {
-		plan skip_all => "Required package LWP::UserAgent not found.";
-	} else {
-		plan tests => 12;
-	}
-} else {
-	plan skip_all => "Server not configured in 'server.config'";
-}
-
 require_ok('Math::Matlab::Remote');
 
 my $t = 'new';
 my $matlab = Math::Matlab::Remote->new;
 isa_ok( $matlab, 'Math::Matlab::Remote', $t );
 
-my $code = "fprintf( '\%.1f\\n', foo(5));";
+SKIP: {
+	my $reason = '';
+	if ($Math::Matlab::Remote::URI) {
+		eval { require LWP::UserAgent };
+		if ($@) {
+			$reason = "Required package LWP::UserAgent not found.";
+		}
+	} else {
+		$reason = "Server not configured in 'server.config'";
+	}
 
-$t = 'execute';
-my $rv = $matlab->execute($code);
-ok( $rv, $t );
-
-$t = 'fetch_result';
-my $got = $matlab->fetch_result	if $rv;
-cmp_ok( $got, '==', 25, $t );
-
-print $matlab->err_msg	unless $rv;
-
-$t = 'new( { uri => ... } )';
-$matlab = Math::Matlab::Remote->new( {	uri => $Math::Matlab::Remote::URI . '/test' } );
-ok( $matlab, $t );
-
-$t = 'execute($code)';
-$rv = $matlab->execute( $code );
-ok( $rv, $t );
-
-$t = 'fetch_result';
-$got = $matlab->fetch_result	if $rv;
-cmp_ok( $got, '==', 26, $t );
-
-$t = 'execute($code, $rel_mwd)';
-$rv = $matlab->execute( $code, 'remote' );
-ok( $rv, $t );
-
-$t = 'fetch_result';
-$got = $matlab->fetch_result	if $rv;
-cmp_ok( $got, '==', 27, $t );
-
-print $matlab->err_msg	unless $rv;
-
-$t = 'new( { uri => ... } )';
-$matlab = Math::Matlab::Remote->new( {	uri => $Math::Matlab::Remote::URI . '/test/remote' } );
-ok( $matlab, $t );
-
-$t = 'execute($code)';
-$rv = $matlab->execute( $code );
-ok( $rv, $t );
-
-$t = 'fetch_result';
-$got = $matlab->fetch_result	if $rv;
-cmp_ok( $got, '==', 27, $t );
-
-print $matlab->err_msg	unless $rv;
+	skip $reason, 10	if $reason;
+	
+	my $code = "fprintf( '\%.1f\\n', foo(5));";
+	
+	$t = 'execute';
+	my $rv = $matlab->execute($code);
+	ok( $rv, $t );
+	
+	$t = 'fetch_result';
+	my $got = $matlab->fetch_result	if $rv;
+	cmp_ok( $got, '==', 25, $t );
+	
+	print $matlab->err_msg	unless $rv;
+	
+	$t = 'new( { uri => ... } )';
+	$matlab = Math::Matlab::Remote->new( {	uri => $Math::Matlab::Remote::URI . '/test' } );
+	ok( $matlab, $t );
+	
+	$t = 'execute($code)';
+	$rv = $matlab->execute( $code );
+	ok( $rv, $t );
+	
+	$t = 'fetch_result';
+	$got = $matlab->fetch_result	if $rv;
+	cmp_ok( $got, '==', 26, $t );
+	
+	$t = 'execute($code, $rel_mwd)';
+	$rv = $matlab->execute( $code, 'remote' );
+	ok( $rv, $t );
+	
+	$t = 'fetch_result';
+	$got = $matlab->fetch_result	if $rv;
+	cmp_ok( $got, '==', 27, $t );
+	
+	print $matlab->err_msg	unless $rv;
+	
+	$t = 'new( { uri => ... } )';
+	$matlab = Math::Matlab::Remote->new( {	uri => $Math::Matlab::Remote::URI . '/test/remote' } );
+	ok( $matlab, $t );
+	
+	$t = 'execute($code)';
+	$rv = $matlab->execute( $code );
+	ok( $rv, $t );
+	
+	$t = 'fetch_result';
+	$got = $matlab->fetch_result	if $rv;
+	cmp_ok( $got, '==', 27, $t );
+	
+	print $matlab->err_msg	unless $rv;
+}
 
 1;
 

@@ -21,16 +21,25 @@ if ( -f $conf_file ) {
 	}
 }
 
-use vars qw( $MATLAB_CMD );
+use vars qw( $MATLAB_CMD $HAVE_LOCAL_MATLAB );
 
 if ( -f $conf_file ) {
 	require "$conf_file";
 } else {
 	$MATLAB_CMD = get_input( "Enter command to execute Matlab", '/usr/local/bin/matlab -nodisplay -nojvm');
+	print "Attempting to run Matlab ... ";
+	my $result = `$MATLAB_CMD -r quit`;
+	$HAVE_LOCAL_MATLAB = $result && $result =~ /MathWorks/ ? 1 : 0;
+	if ($HAVE_LOCAL_MATLAB) {
+		print " OK\n";
+	} else {
+		print "\n\n'$MATLAB_CMD' does not start Matlab, tests with local Matlab will be skipped.\n";
+	}
 	
 	open( CONF, "> $conf_file" ) || die "Cannot open $conf_file for writing! Error: $!";
 print CONF <<EOF;
 \$MATLAB_CMD = '$MATLAB_CMD';
+\$HAVE_LOCAL_MATLAB = $HAVE_LOCAL_MATLAB;
 
 1;
 EOF
@@ -42,8 +51,8 @@ write_makefile();
 
 print <<EOF;
 
-Tests for the Server and Remote classes of the the Math::Matlab package
-are not run by default.
+Most of the tests for the Server and Remote classes of the the
+Math::Matlab package are not run by default.
 
 In order to test them, you will need to set up a server according to the
 instructions in the INSTALL file, then edit the 'server.config' file

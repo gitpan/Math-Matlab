@@ -5,11 +5,9 @@ BEGIN {
 }
 use strict;
 use Test::More tests => 10;
-# use Test::More qw(no_plan);
-
 use Cwd qw( abs_path );
 
-use vars qw( $MATLAB_CMD );
+use vars qw( $MATLAB_CMD $HAVE_LOCAL_MATLAB );
 require "matlab.config";
 
 $Math::Matlab::Pool::MEMBERS = $Math::Matlab::Pool::SYNC_FILE = '';
@@ -30,26 +28,30 @@ my $t = 'new';
 my $matlab = Math::Matlab::Pool->new;
 isa_ok( $matlab, 'Math::Matlab::Pool', $t );
 
-my ($rv, $got);
-my @results = ( 25, 26, 27, 25, 26, 27 );
+SKIP: {
+	skip "'$MATLAB_CMD' does not start Matlab", 7	unless $HAVE_LOCAL_MATLAB;
 
-foreach my $i (0..5) {
-	$t = 'execute($code): ' . $i;
-	$rv = $matlab->execute( "fprintf( '\%.1f\\n', foo(5));" );
+	my ($rv, $got);
+	my @results = ( 25, 26, 27, 25, 26, 27 );
+	
+	foreach my $i (0..5) {
+		$t = 'execute($code): ' . $i;
+		$rv = $matlab->execute( "fprintf( '\%.1f\\n', foo(5));" );
+		$got = $matlab->fetch_result	if $rv;
+		cmp_ok( $got, '==', $results[$i], $t );
+		print $matlab->err_msg	unless $rv;
+	}
+	
+	$t = 'execute($code, $rel_mwd)';
+	my $matlab0 = $matlab->members->[0];
+	$matlab0->root_mwd( abs_path( './t' ));
+	$rv = $matlab->execute( "fprintf( '\%.1f\\n', foo(5));", 'mwd1' );
 	$got = $matlab->fetch_result	if $rv;
-	cmp_ok( $got, '==', $results[$i], $t );
+	cmp_ok( $got, '==', 26, $t );
 	print $matlab->err_msg	unless $rv;
+	
+	unlink $matlab->sync_file;
 }
-
-$t = 'execute($code, $rel_mwd)';
-my $matlab0 = $matlab->members->[0];
-$matlab0->root_mwd( abs_path( './t' ));
-$rv = $matlab->execute( "fprintf( '\%.1f\\n', foo(5));", 'mwd1' );
-$got = $matlab->fetch_result	if $rv;
-cmp_ok( $got, '==', 26, $t );
-print $matlab->err_msg	unless $rv;
-
-unlink $matlab->sync_file;
 
 1;
 
