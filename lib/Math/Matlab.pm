@@ -4,8 +4,8 @@ use strict;
 use vars qw($VERSION $Revision);
 
 BEGIN {
-	$VERSION = '0.02';
-	$Revision = sprintf "%d.%03d", q$Revision: 1.2 $ =~ /: (\d+)\.(\d+)/;
+	$VERSION = '0.03';
+	$Revision = sprintf "%d.%03d", q$Revision: 1.4 $ =~ /: (\d+)\.(\d+)/;
 }
 
 ##-----  Public Class Methods  -----
@@ -19,7 +19,8 @@ sub get_result {
 	my $self = shift;
 
 	my ($result) = $self->{'result'} =~ /-----MATLAB-BEGIN-----\n(.*)------MATLAB-END------/s;
-	$result =~ s/>> //g;
+	$result =~ s/EDU>> //g;		##Êremove edu prompts
+	$result =~ s/>> //g;		## remove normal prompts
 
 	return $result;
 }

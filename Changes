@@ -1,5 +1,13 @@
 Revision history for Math-Matlab.
 
+0.03  Wed, Jun 2, 2004
+
+	- added code to strip EDU>> prompts
+	  (thanks to Alex Scouras)
+	- fixed some 'bugs' in docs for Math::Matlab::Local
+	  (thanks to Adam Pirkle)
+
+
 0.02  Wed, Oct 30, 2002
 
 	- First public release

@@ -4,7 +4,7 @@ use strict;
 use vars qw($VERSION $ROOT_MWD $CMD);
 
 BEGIN {
-	$VERSION = sprintf "%d.%03d", q$Revision: 1.3 $ =~ /: (\d+)\.(\d+)/;
+	$VERSION = sprintf "%d.%03d", q$Revision: 1.4 $ =~ /: (\d+)\.(\d+)/;
 }
 
 use Math::Matlab;
@@ -106,12 +106,12 @@ Math::Matlab::Local - Interface to a local Matlab process.
 =head1 SYNOPSIS
 
   use Math::Matlab::Local;
-  $matlab = Math::Matlab::Local->new(
+  $matlab = Math::Matlab::Local->new({
       cmd      => '/usr/local/matlab -nodisplay -nojvm',
       root_mwd => '/path/to/matlab/working/directory/'
-  );
+  });
   
-  my $code = q/fprintf( 'Hello world!\n' );/
+  my $code = q/fprintf( 'Hello world!\n' );/;
   if ( $matlab->execute($code) ) {
       print $matlab->fetch_result;
   } else {
