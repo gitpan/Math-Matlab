@@ -4,7 +4,7 @@ BEGIN {
 	use lib qw ( t );
 }
 use strict;
-use Test::More tests => 10;
+use Test::More tests => 12;
 use Cwd qw( abs_path );
 
 use vars qw( $MATLAB_CMD $HAVE_LOCAL_MATLAB );
@@ -41,9 +41,19 @@ ENDOFCODE
 9	81
 10	100
 ENDOFRESULT
-	
-	$t = 'execute';
+
+	$t = 'execute (error running matlab)';
+	my $cmd = $matlab->cmd;
+	$matlab->cmd('ls');
 	my $rv = $matlab->execute($code);
+	ok(!$rv, $t);
+	ok($matlab->err_msg =~ /ls <(.*)README(.*)lib/s, $t);
+	my ($fn) = $matlab->err_msg =~ /ls < (cmd(\d+)\.m)/;
+	unlink $fn;
+
+	$matlab->cmd($cmd);
+	$t = 'execute';
+	$rv = $matlab->execute($code);
 	ok( $rv, $t );
 	
 	$t = 'fetch_result';

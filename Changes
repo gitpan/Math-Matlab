@@ -1,5 +1,12 @@
 Revision history for Math-Matlab.
 
+0.05  Fri, Oct 7, 2005
+
+	- Better error reporting when Matlab fails to start.
+	- Fixed logic in Matlab::Local::execute for restoring current working
+	  directory when only a relative working directory is given.
+	- Doc fixes in Pool.pm.
+
 0.04  Wed, Jun 2, 2004
 
     - Updated to skip tests if there is not a properly configured local

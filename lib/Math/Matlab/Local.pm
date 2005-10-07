@@ -4,7 +4,7 @@ use strict;
 use vars qw($VERSION $ROOT_MWD $CMD);
 
 BEGIN {
-	$VERSION = sprintf "%d.%03d", q$Revision: 1.4 $ =~ /: (\d+)\.(\d+)/;
+	$VERSION = sprintf "%d.%03d", q$Revision: 1.6 $ =~ /: (\d+)\.(\d+)/;
 }
 
 use Math::Matlab;
@@ -36,13 +36,13 @@ sub execute {
 	my ($cwd, $cmd);
 	
 	## save current directory and change to Matlab working directory
+	$cwd = getcwd	if $self->root_mwd or $rel_mwd;
 	if ($self->root_mwd) {
-		$cwd = getcwd;
 		chdir $self->root_mwd	or die("Couldn't chdir to '@{[ $self->root_mwd ]}'");
-		if ($rel_mwd) {
-			my $mwd = abs_path( $rel_mwd );
-			chdir $mwd	or die("Couldn't chdir to '$mwd'");
-		}
+	}
+	if ($rel_mwd) {
+		my $mwd = abs_path( $rel_mwd );
+		chdir $mwd	or die("Couldn't chdir to '$mwd'");
 	}
 	
 	## create input file
@@ -55,15 +55,15 @@ sub execute {
 	$self->{'result'} = `$cmd`;
 
 	## return true if everythings fine, set errormsg and return false otherwise
-	if ($self->{'result'}) {
+	if ($self->{'result'} =~ /Copyright (.+) MathWorks/) {
 		unlink $fn;								## delete input file
 	} else {
 		$success = 0;
-		$self->err_msg('`' . $cmd . '`' . ' in ' . getcwd . ' returned nothing.');
+		$self->err_msg('`' . $cmd . '`' . ' in ' . getcwd . " returned:\n" . $self->{'result'});
 	}
 
 	## restore current working directory
-	if ($self->root_mwd) {
+	if ($cwd) {
 		chdir $cwd	or die("Couldn't chdir to '$cwd'");
 	}
 

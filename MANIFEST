@@ -4,7 +4,7 @@ MANIFEST
 INSTALL
 README
 
-## -- COFFEE classes --
+## -- classes --
 lib/Math/Matlab.pm
 lib/Math/Matlab/Local.pm
 lib/Math/Matlab/Pool.pm

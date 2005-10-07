@@ -4,7 +4,7 @@ use strict;
 use vars qw($VERSION $URI $TIMEOUT $USER $PASS);
 
 BEGIN {
-	$VERSION = sprintf "%d.%03d", q$Revision: 1.5 $ =~ /: (\d+)\.(\d+)/;
+	$VERSION = sprintf "%d.%03d", q$Revision: 1.6 $ =~ /: (\d+)\.(\d+)/;
 }
 
 use Math::Matlab;
@@ -85,12 +85,12 @@ Math::Matlab::Remote - Interface to a remote Matlab process.
 =head1 SYNOPSIS
 
   use Math::Matlab::Remote;
-  $matlab = Math::Matlab::Remote->new(
-      uri     => '/usr/local/matlab -nodisplay -nojvm',
-      timeout => '/path/to/matlab/working/directory/'
+  $matlab = Math::Matlab::Remote->new({
+      uri     => 'https://server1.mydomain.com',
+      timeout => 300,
       user    => 'me',
       pass    => 'my_password'
-  );
+  });
   
   my $code = q/fprintf( 'Hello world!\n' );/
   if ( $matlab->execute($code) ) {

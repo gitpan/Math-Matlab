@@ -4,7 +4,7 @@ use strict;
 use vars qw($VERSION $MEMBERS $SYNC_FILE);
 
 BEGIN {
-	$VERSION = sprintf "%d.%03d", q$Revision: 1.3 $ =~ /: (\d+)\.(\d+)/;
+	$VERSION = sprintf "%d.%03d", q$Revision: 1.4 $ =~ /: (\d+)\.(\d+)/;
 }
 
 use Math::Matlab;
@@ -86,10 +86,10 @@ Math::Matlab::Pool - Interface to a pool of Matlab processes.
 =head1 SYNOPSIS
 
   use Math::Matlab::Pool;
-  $matlab = Math::Matlab::Pool->new(
+  $matlab = Math::Matlab::Pool->new({
       members   => [ $matlab1, $matlab2, $matlab3 ],
       sync_file => '/path/to/sync/file'
-    );
+    });
   
   my $code = q/fprintf( 'Hello world!\n' );/
   if ( $matlab->execute($code) ) {
@@ -155,14 +155,15 @@ This allows one to construct a Pool and all of its members with a single
 call to the Pool's new() method.
 
 E.g.
+ $class = 'Math::Matlab::Remote';
  $matlab = Math::Matlab::Pool->new({
     sync_file => '/tmp/matlab-pool-sync.txt',
     members   => [
-        { class => 'Math::Matlab::Remote', uri => 'http://server1.mydomain.com' },
-        { class => 'Math::Matlab::Remote', uri => 'http://server2.mydomain.com' },
-        { class => 'Math::Matlab::Remote', uri => 'http://server3.mydomain.com' }
+        { class => $class, args => { uri => 'https://server1.mydomain.com' }},
+        { class => $class, args => { uri => 'https://server2.mydomain.com' }},
+        { class => $class, args => { uri => 'https://server3.mydomain.com' }}
     ]
- } )
+ });
 
 =back
 
