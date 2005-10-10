@@ -18,7 +18,7 @@ my $matlab = Math::Matlab::Local->new;
 isa_ok( $matlab, 'Math::Matlab::Local', $t );
 
 SKIP: {
-	skip "'$MATLAB_CMD' does not start Matlab", 8	unless $HAVE_LOCAL_MATLAB;
+	skip "'$MATLAB_CMD' does not start Matlab", 10	unless $HAVE_LOCAL_MATLAB;
 
 	$t = "'$MATLAB_CMD' successfully starts Matlab.";
 	ok($HAVE_LOCAL_MATLAB, $t);
