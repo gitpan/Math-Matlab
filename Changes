@@ -1,5 +1,9 @@
 Revision history for Math-Matlab.
 
+0.06  Mon, Oct 10, 2005
+
+	- Fixed bug in t/01_local.t that was causing new test to fail for some.
+
 0.05  Fri, Oct 7, 2005
 
 	- Better error reporting when Matlab fails to start.

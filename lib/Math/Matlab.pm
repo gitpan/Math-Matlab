@@ -4,8 +4,8 @@ use strict;
 use vars qw($VERSION $Revision);
 
 BEGIN {
-	$VERSION = '0.05';
-	$Revision = sprintf "%d.%03d", q$Revision: 1.6 $ =~ /: (\d+)\.(\d+)/;
+	$VERSION = '0.06';
+	$Revision = sprintf "%d.%03d", q$Revision: 1.7 $ =~ /: (\d+)\.(\d+)/;
 }
 
 ##-----  Public Class Methods  -----

@@ -44,11 +44,11 @@ ENDOFRESULT
 
 	$t = 'execute (error running matlab)';
 	my $cmd = $matlab->cmd;
-	$matlab->cmd('ls');
+	$matlab->cmd("echo 'hello'");
 	my $rv = $matlab->execute($code);
 	ok(!$rv, $t);
-	ok($matlab->err_msg =~ /ls <(.*)README(.*)lib/s, $t);
-	my ($fn) = $matlab->err_msg =~ /ls < (cmd(\d+)\.m)/;
+	ok($matlab->err_msg =~ /echo 'hello' <(.*)hello/s, $t);
+	my ($fn) = $matlab->err_msg =~ /echo 'hello' < (cmd(\d+)\.m)/;
 	unlink $fn;
 
 	$matlab->cmd($cmd);
