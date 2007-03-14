@@ -1,5 +1,14 @@
 Revision history for Math-Matlab.
 
+0.08  
+	NOTE: This version is incompatible with servers from previous versions.
+	      Local and Remote must both be running 0.08 or later.
+	- Improved error handling by using a Matlab wrapper that uses try/catch
+	  and evalc (suggested by Medi Montaseri <montaseri@gmail.com>).
+	- Updated to use -r and -logfile args to Matlab instead of STDIN and
+	  STDOUT. Using -logfile captures the STDERR as well as STDOUT.
+	- Removed create_cmd_file() and added remove_files() in Math::Matlab::Local.
+
 0.07  Mon, Oct 10, 2005
 
 	- Fixed another bug in t/01_local.t that was causing failures for cpan testers.

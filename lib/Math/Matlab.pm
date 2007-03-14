@@ -4,8 +4,8 @@ use strict;
 use vars qw($VERSION $Revision);
 
 BEGIN {
-	$VERSION = '0.07';
-	$Revision = sprintf "%d.%03d", q$Revision: 1.8 $ =~ /: (\d+)\.(\d+)/;
+	$VERSION = '0.08';
+	$Revision = sprintf "%d.%03d", q$Revision: 1.9 $ =~ /: (\d+)\.(\d+)/;
 }
 
 ##-----  Public Class Methods  -----
@@ -14,13 +14,14 @@ sub new { die "Unable to create instance of abstract class " . __PACKAGE__; };
 ##-----  Public Object Methods  -----
 sub execute { die "Abstract method execute() must be overridden." };
 sub err_msg {	my $self = shift; return $self->_getset('err_msg',	@_); }
+sub clear_err_msg { return $_[0]->{err_msg} = undef; }
 
 sub get_result {
 	my $self = shift;
 
-	my ($result) = $self->{'result'} =~ /-----MATLAB-BEGIN-----\n(.*)------MATLAB-END------/s;
-	$result =~ s/EDU>> //g;		##Êremove edu prompts
-	$result =~ s/>> //g;		## remove normal prompts
+	my ($result) = $self->{'result'} =~ /-----MATLAB-BEGIN-----\n-----SUCCESS\n(.*)/s;
+# 	$result =~ s/EDU>> //g;		##Êremove edu prompts
+# 	$result =~ s/>> //g;		## remove normal prompts
 
 	return $result;
 }
@@ -149,19 +150,9 @@ A utility method used to get or set a field in the object.
 
 =back
 
-=head1 CHANGE HISTORY
-
-=over 4
-
-=item *
-
-10/15/02 - (RZ) Created.
-
-=back
-
 =head1 COPYRIGHT
 
-Copyright (c) 2002 PSERC. All rights reserved.
+Copyright (c) 2002, 2007 PSERC. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

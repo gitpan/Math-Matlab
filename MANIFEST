@@ -15,6 +15,7 @@ lib/Math/Matlab/Server.pm
 t/01_local.t
 t/02_pool.t
 t/03_remote_server.t
+t/existing.m
 t/mwd0/foo.m
 t/mwd1/foo.m
 t/mwd2/foo.m
